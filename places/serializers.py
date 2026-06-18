@@ -17,6 +17,7 @@ class ItinerarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Itinerary
         fields = "__all__"
+        read_only_fields = ("user",)
 
     def validate(self, attrs):
         start = attrs.get("start")

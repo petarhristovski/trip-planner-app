@@ -23,6 +23,12 @@ AMADEUS_BASE_URL = os.getenv("AMADEUS_BASE_URL", "https://test.api.amadeus.com")
 AMADEUS_CLIENT_ID = os.getenv("AMADEUS_CLIENT_ID")
 AMADEUS_CLIENT_SECRET = os.getenv("AMADEUS_CLIENT_SECRET")
 
+AVIATON_STACK_API_KEY = os.getenv("AVIATON_STACK_API_KEY")
+
+DUFFEL_API_KEY = os.getenv("DUFFEL_API_KEY")
+
+SERP_API_KEY = os.getenv("SERP_API_KEY")
+
 FOURSQUARE_API_KEY = os.getenv("FOURSQUARE_API_KEY")
 
 GEOAPIFY_API_KEY = os.getenv("GEOAPIFY_API_KEY")
@@ -31,7 +37,10 @@ GEOAPIFY_API_KEY = os.getenv("GEOAPIFY_API_KEY")
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-evjh#r-r1^xg741)d9!kh8+hxvt!0y=jz4u4(c4t#fh+935swh'
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY environment variable is not set")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

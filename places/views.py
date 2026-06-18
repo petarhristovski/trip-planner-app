@@ -11,11 +11,14 @@ from scipy.stats import t
 from rest_framework import generics
 from requests.structures import CaseInsensitiveDict
 
+from django.conf import settings
+
 from places.models import Itinerary, PriceAnalysis, Activity
 from places.serializers import ItinerarySerializer, ActivitySerializer
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
-OVERPASS_URL = "https://overpass.kumi.systems/api/interpreter"
+# OVERPASS_URL = "https://overpass.kumi.systems/api/interpreter"
+OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 
 def safe_json(response):
     try:
@@ -39,7 +42,7 @@ def get_country_from_city(city):
     }
 
     headers = {
-        "User-Agent": "restaurant_app/1.0 (contact: mirceseljak@gmail.com)"
+        "User-Agent": "restaurant_app/1.0 (contact: pepipetar345@gmail.com)"
     }
 
     r = requests.get(url, params=params, headers=headers)
@@ -58,7 +61,7 @@ def get_city_coordinates(city_name):
             "format": "json",
             "limit": 1
         },
-        headers={"User-Agent": "restaurant_app/1.0 (contact: mirceseljak@gmail.com)"}
+        headers={"User-Agent": "restaurant_app/1.0 (contact: pepipetar345@gmail.com)"}
     )
 
     response.raise_for_status()
@@ -212,10 +215,10 @@ def try_common_menu_paths(website_url: str, country: str) -> list[str]:
 
         try:
             # HEAD first to avoid downloading large PDFs; some servers don't support HEAD
-            r = requests.head(candidate, headers={"User-Agent": "restaurant_app/1.0 (contact: mirceseljak@gmail.com)"}, timeout=TIMEOUT, allow_redirects=True)
+            r = requests.head(candidate, headers={"User-Agent": "restaurant_app/1.0 (contact: pepipetar345@gmail.com)"}, timeout=TIMEOUT, allow_redirects=True)
 
             if r.status_code == 405:  # Method Not Allowed -> fallback to GET
-                r = requests.get(candidate, headers={"User-Agent": "restaurant_app/1.0 (contact: mirceseljak@gmail.com)"}, timeout=TIMEOUT, allow_redirects=True)
+                r = requests.get(candidate, headers={"User-Agent": "restaurant_app/1.0 (contact: pepipetar345@gmail.com)"}, timeout=TIMEOUT, allow_redirects=True)
 
             if r.status_code == 200:
                 found.append(candidate)
@@ -229,7 +232,7 @@ def find_menu_links(home_url, country):
     try:
         r = requests.get(
             home_url,
-            headers={"User-Agent": "restaurant_app/1.0 (contact: mirceseljak@gmail.com)"},
+            headers={"User-Agent": "restaurant_app/1.0 (contact: pepipetar345@gmail.com)"},
             timeout=6,
             allow_redirects=True
         )
@@ -274,7 +277,7 @@ def extract_prices(menu_links, country):
         try:
             r = requests.get(
                 link,
-                headers={"User-Agent": "restaurant_app/1.0 (contact: mirceseljak@gmail.com)"},
+                headers={"User-Agent": "restaurant_app/1.0 (contact: pepipetar345@gmail.com)"},
                 timeout=6,
                 allow_redirects=True
             )
@@ -329,17 +332,17 @@ def extract_prices(menu_links, country):
 def get_restaurant_prices(request):
     city = request.query_params.get("city", "Budapest")
 
-    # cached = PriceAnalysis.objects.filter(city=city).order_by("-created_at").first()
+    cached = PriceAnalysis.objects.filter(city=city).order_by("-created_at").first()
 
-    # if cached:
-    #     return Response({
-    #         "average": cached.average_price,
-    #         "median": cached.median_price,
-    #         "confidence_interval": [cached.confidence_interval_lower, cached.confidence_interval_upper],
-    #         "n": cached.sample_count,
-    #         "currency": cached.currency,
-    #         "created_at": cached.created_at,
-    #     })
+    if cached:
+        return Response({
+            "average": cached.average_price,
+            "median": cached.median_price,
+            "confidence_interval": [cached.confidence_interval_lower, cached.confidence_interval_upper],
+            "n": cached.sample_count,
+            "currency": cached.currency,
+            "created_at": cached.created_at,
+        })
 
     country = get_country_from_city(city)
     print(country)
@@ -392,90 +395,159 @@ def get_restaurant_prices(request):
         "n": n
     })
 
+# @api_view(["GET"])
+# def get_top_attractions(request):
+#     city = request.query_params.get("city")
+#     # lat, lon = get_city_coordinates(city)
+#
+#     url = "https://places-api.foursquare.com/places/search"
+#     headers = {
+#         "Authorization": f"Bearer {settings.FOURSQUARE_API_KEY}",
+#         "X-Places-Api-Version": "2025-06-17",
+#     }
+#     params = {
+#         "near": f"{city}",
+#         "categories": "16000,10027,10028",  # landmarks + museums + historic sites
+#         # "query": "restaurant",
+#         "sort": "POPULARITY",
+#         "limit": 20
+#     }
+#
+#     r = requests.get(url, headers=headers, params=params)
+#     r.raise_for_status()
+#     data_full = r.json()
+#     data = data_full["results"]
+#     result = []
+#     API_KEY = settings.GEOAPIFY_API_KEY
+#
+#     for landmark in data:
+#         name = landmark["name"]
+#         url = "https://api.geoapify.com/v2/places"
+#
+#         lat = landmark["latitude"]
+#         lon = landmark["longitude"]
+#
+#         params = {
+#             "text": f"{name}",
+#             "bias": f"proximity:{lon},{lat}",
+#             "categories": "tourism.attraction",
+#             "limit": 1,
+#             "apiKey": API_KEY
+#         }
+#
+#         resp = requests.get(url, params=params)
+#         data = resp.json()
+#
+#         place_id = data["features"][0]["properties"]["place_id"]
+#
+#         url = "https://api.geoapify.com/v2/place-details"
+#
+#         params = {
+#             "id": place_id,
+#             "apiKey": API_KEY
+#         }
+#
+#         resp = requests.get(url, params=params)
+#         geo_data = resp.json()
+#
+#         # if "tourism.attraction.artwork" in geo_data["features"][0]["properties"]["categories"]:
+#         #     result.append({
+#         #         "name": landmark["name"],
+#         #     })
+#         # else:
+#         result.append({
+#             "name": landmark["name"],
+#             "placedetails": resp.json()
+#         })
+#
+#     return Response(result)
+
 @api_view(["GET"])
 def get_top_attractions(request):
     city = request.query_params.get("city")
-    # lat, lon = get_city_coordinates(city)
-
-    url = "https://places-api.foursquare.com/places/search"
-    headers = {
+    base_headers = {
         "Authorization": f"Bearer {settings.FOURSQUARE_API_KEY}",
         "X-Places-Api-Version": "2025-06-17",
     }
-    params = {
-        "near": f"{city}",
-        "categories": "16000,10027,10028",  # landmarks + museums + historic sites
-        # "query": "restaurant",
+
+    # 1. Search for popular attractions in the city
+    search_url = "https://places-api.foursquare.com/places/search"
+    search_params = {
+        "near": city,
+        "categories": "16000,10027,10028",
         "sort": "POPULARITY",
-        "limit": 20
+        "limit": 20,
     }
-
-    r = requests.get(url, headers=headers, params=params)
+    r = requests.get(search_url, headers=base_headers, params=search_params)
     r.raise_for_status()
-    data_full = r.json()
-    data = data_full["results"]
-    result = []
-    API_KEY = settings.GEOAPIFY_API_KEY
+    results = r.json()["results"]
 
-    for landmark in data:
-        name = landmark["name"]
-        url = "https://api.geoapify.com/v2/places"
+    # return Response(results)
 
-        lat = landmark["latitude"]
-        lon = landmark["longitude"]
+    attractions = []
+    for place in results:
+        # fsq_id = place["fsq_place_id"]
+        #
+        # # 2. Get details for photo + hours
+        # details_url = f"https://places-api.foursquare.com/places/{fsq_id}"
+        # details_params = {"fields": "name,photos,hours"}
+        # d = requests.get(details_url, headers=base_headers, params=details_params)
+        # # d.raise_for_status()
+        # details = d.json()
+        #
+        # # Build photo URL if available
+        # photo_url = None
+        # if details.get("photos"):
+        #     photo = details["photos"][0]
+        #     photo_url = f"{photo['prefix']}original{photo['suffix']}"
 
-        params = {
-            "text": f"{name}",
-            "bias": f"proximity:{lon},{lat}",
-            "categories": "tourism.attraction",
-            "limit": 1,
-            "apiKey": API_KEY
-        }
-
-        resp = requests.get(url, params=params)
-        data = resp.json()
-
-        place_id = data["features"][0]["properties"]["place_id"]
-
-        url = "https://api.geoapify.com/v2/place-details"
-
-        params = {
-            "id": place_id,
-            "apiKey": API_KEY
-        }
-
-        resp = requests.get(url, params=params)
-        geo_data = resp.json()
-
-        if "tourism.attraction.artwork" in geo_data["features"][0]["properties"]["categories"]:
-            result.append({
-                "name": landmark["name"],
-            })
+        if "(" in place["name"]:
+            name = place["name"].split("(")[0][:-1]
         else:
-            result.append({
-                "name": landmark["name"],
-                "placedetails": resp.json()
-            })
+            name = place["name"]
 
-    return Response(result)
+        attractions.append({
+            "name": name,
+        })
 
-class ItineraryAPIView(generics.CreateAPIView):
+    return Response(attractions)
+
+class ItineraryListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = ItinerarySerializer
     permission_classes = [IsAuthenticated]
-    
+
+    def get_queryset(self):
+        queryset = Itinerary.objects.filter(user=self.request.user)
+        city = self.request.query_params.get("city")
+
+        if city:
+            queryset = queryset.filter(city__iexact=city.strip())
+
+        return queryset
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class ActivityAPIView(generics.CreateAPIView):
+class ItineraryDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ItinerarySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Itinerary.objects.filter(user=self.request.user)
+
+class ActivityListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = ActivitySerializer
     permission_classes = [IsAuthenticated]
 
-class ItineraryListAPIView(generics.ListAPIView):
-    serializer_class = ItinerarySerializer
-    permission_classes = [IsAuthenticated]
     def get_queryset(self):
-        return (
-            Itinerary.objects
-            .filter(user=self.request.user)
-            .prefetch_related("items")
-        )
+        return Activity.objects.filter(itinerary__user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+class ActivityDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ActivitySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Activity.objects.filter(itinerary__user=self.request.user)

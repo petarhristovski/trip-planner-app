@@ -4,6 +4,9 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
+import Results from "./pages/Results.jsx";
+import Layout from "./components/Layout.jsx";
+import Itinerary from "./pages/Itinerary.jsx";
 
 function LogOut(){
   localStorage.clear()
@@ -18,14 +21,23 @@ function RegisterAndLogout(){
 function App() {
   return (
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<RegisterAndLogout />} />
-          <Route path="/logout" element={<LogOut />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+            <Routes>
+
+                {/* Routes with sidebar */}
+                <Route element={<Layout />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/results" element={<Results />} />
+                    <Route path="/itinerary/:id" element={<Itinerary />} />
+                </Route>
+
+                {/* Routes without sidebar */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<RegisterAndLogout />} />
+                <Route path="/logout" element={<LogOut />} />
+
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </BrowserRouter>
   )
 }
 

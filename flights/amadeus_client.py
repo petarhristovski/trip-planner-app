@@ -36,10 +36,15 @@ def search_offers(origin, destination, departure_date, adults=1, **kwargs):
         "adults": adults,
         "max": kwargs.get("max", 20),
         "currencyCode": kwargs.get("currencyCode", "EUR"),
-        "nonStop": str(kwargs.get("nonStop", False)).lower(),
+        "nonStop": False,
     }
     if kwargs.get("returnDate"):
         params["returnDate"] = kwargs["returnDate"]
 
-    r = requests.get(url, params=params, headers={"Authorization": f"Bearer {token}"}, timeout=30)
-    return r.status_code, r.json()
+    r = requests.post(url, json=params, headers={
+        "Authorization": f"Bearer {token}",
+    }, timeout=30)    
+    try:
+        return r.status_code, r.json()
+    except Exception:
+        return r.status_code, r.text

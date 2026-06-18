@@ -8,8 +8,17 @@ from django.core.exceptions import ValidationError
 class Itinerary(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
     start = models.DateField()
     end = models.DateField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "city", "name"],
+                name="unique_itinerary_per_user_city_name",
+            )
+        ]
 
     def clean(self):
         if self.start and self.end and self.start > self.end:

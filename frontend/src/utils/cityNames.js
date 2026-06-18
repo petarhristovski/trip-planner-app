@@ -1,0 +1,71 @@
+export const cityNames = {
+    // North America
+    NYC: "New York",
+    LAX: "Los Angeles",
+    ORD: "Chicago",
+    MIA: "Miami",
+    SFO: "San Francisco",
+    LAS: "Las Vegas",
+    BOS: "Boston",
+    YTO: "Toronto",
+    YVR: "Vancouver",
+    MEX: "Mexico City",
+
+    // Europe
+    SKP: "Skopje",
+    PAR: "Paris",
+    LON: "London",
+    ROM: "Rome",
+    MIL: "Milan",
+    BCN: "Barcelona",
+    MAD: "Madrid",
+    BER: "Berlin",
+    MUC: "Munich",
+    AMS: "Amsterdam",
+    VIE: "Vienna",
+    ZRH: "Zurich",
+    LIS: "Lisbon",
+    ATH: "Athens",
+    PRG: "Prague",
+    BUD: "Budapest",
+    DUB: "Dublin",
+    CPH: "Copenhagen",
+    OSL: "Oslo",
+    STO: "Stockholm",
+    HEL: "Helsinki",
+    WAW: "Warsaw",
+    IST: "Istanbul",
+
+    // Asia
+    TYO: "Tokyo",
+    OSA: "Osaka",
+    SEL: "Seoul",
+    BJS: "Beijing",
+    SHA: "Shanghai",
+    HKG: "Hong Kong",
+    BKK: "Bangkok",
+    SIN: "Singapore",
+    KUL: "Kuala Lumpur",
+    DEL: "New Delhi",
+    BOM: "Mumbai",
+    DXB: "Dubai",
+
+    // Oceania
+    SYD: "Sydney",
+    MEL: "Melbourne",
+    AKL: "Auckland",
+
+    // South America
+    BUE: "Buenos Aires",
+    RIO: "Rio de Janeiro",
+    SAO: "São Paulo",
+    LIM: "Lima",
+    SCL: "Santiago",
+    BOG: "Bogotá",
+
+    // Africa
+    CAI: "Cairo",
+    JNB: "Johannesburg",
+    CPT: "Cape Town",
+    CMN: "Casablanca",
+}
