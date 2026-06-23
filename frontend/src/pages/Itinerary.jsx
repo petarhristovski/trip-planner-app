@@ -273,7 +273,7 @@ function Itinerary() {
                                 verticalAlign: "top",
                                 height: "50px",
                                 position: "relative",
-                                backgroundColor: isActivityCell ? "#fff" : "#fff",
+                                backgroundColor: "#fff",
                                 backgroundImage: isActivityCell
                                     ? hasPartialFill
                                         ? `linear-gradient(to bottom, transparent 0%, transparent ${startPct}%, ${slot.activity.color} ${startPct}%, ${slot.activity.color} ${endPct}%, transparent ${endPct}%, transparent 100%)`

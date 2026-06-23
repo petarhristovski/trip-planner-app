@@ -345,7 +345,6 @@ def get_restaurant_prices(request):
         })
 
     country = get_country_from_city(city)
-    print(country)
     data = get_restaurants(city)
     restaurants_data = data["elements"][:50]
     result = []

@@ -7,9 +7,9 @@ const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
 ];
-const ACCENT = "#0839ff";
-const ACCENT_LIGHT = "#f0f3ff";
-const ACCENT_PREVIEW = "#f8faff";
+const ACCENT = "#60A5FA";
+const ACCENT_LIGHT = "rgba(96,165,250,0.12)";
+const ACCENT_PREVIEW = "rgba(96,165,250,0.06)";
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
 
@@ -54,7 +54,7 @@ const S = {
   shell: {
     fontFamily:
       "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    display: "inline-block"
+    display: "inline-block",
     // display: "flex",
     // flexDirection: "column",
     // alignItems: "center",
@@ -65,34 +65,34 @@ const S = {
   // Two-field bar
   inputRow: {
     display: "flex",
-    border: "1.5px solid #ddd",
+    border: "1.5px solid #122033",
     borderRadius: "12px",
     overflow: "hidden",
     width: "310px",
     maxWidth: "330px",
     maxHeight: "52px",
-    background: "#fff",
+    background: "#071025",
     cursor: "pointer",
   },
   field: (active) => ({
     flex: 1,
     padding: "8px 20px",
-    borderRight: "1px solid #eee",
-    background: active ? "#f7f7f7" : "#fff",
+    borderRight: "1px solid #122033",
+    background: active ? "#0f1724" : "#071025",
     transition: "background 0.15s",
     userSelect: "none",
   }),
   fieldLast: (active) => ({
     flex: 1,
     padding: "8px 20px",
-    background: active ? "#f7f7f7" : "#fff",
+    background: active ? "#0f1724" : "#071025",
     transition: "background 0.15s",
     userSelect: "none",
   }),
   fieldLabel: {
     fontSize: "11px",
     fontWeight: 600,
-    color: "#888",
+    color: "#9aa4b2",
     textTransform: "uppercase",
     letterSpacing: "0.06em",
     marginBottom: "4px",
@@ -100,18 +100,18 @@ const S = {
   fieldValue: (hasValue) => ({
     fontSize: "15px",
     fontWeight: hasValue ? 500 : 400,
-    color: hasValue ? "#222" : "#aaa",
+    color: hasValue ? "#E6EEF8" : "#89A0B6",
   }),
 
   // Floating panel
   panel: {
-    background: "#fff",
-    border: "1px solid #e0e0e0",
+    background: "#071025",
+    border: "1px solid #122033",
     borderRadius: "16px",
     padding: "24px",
     width: "100%",
     maxWidth: "660px",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.10)",
+    boxShadow: "0 8px 32px rgba(2,6,23,0.6)",
   },
   monthsGrid: {
     display: "grid",
@@ -130,19 +130,19 @@ const S = {
     width: "32px",
     height: "32px",
     borderRadius: "50%",
-    border: "1px solid #ddd",
+    border: "1px solid #122033",
     background: "transparent",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     fontSize: "16px",
-    color: "#444",
+    color: "#C7D2E6",
     lineHeight: 1,
     transition: "background 0.12s",
   },
   navBtnHidden: { visibility: "hidden" },
-  monthTitle: { fontSize: "15px", fontWeight: 600, color: "#222" },
+  monthTitle: { fontSize: "15px", fontWeight: 600, color: "#E6EEF8" },
 
   // Day grid
   dayHeaders: {
@@ -154,7 +154,7 @@ const S = {
     textAlign: "center",
     fontSize: "12px",
     fontWeight: 500,
-    color: "#aaa",
+    color: "#8FA0B3",
     padding: "4px 0",
   },
   daysGrid: {
@@ -170,20 +170,20 @@ const S = {
     justifyContent: "space-between",
     marginTop: "20px",
     paddingTop: "16px",
-    borderTop: "1px solid #eee",
+    borderTop: "1px solid #122033",
     flexWrap: "wrap",
     gap: "8px",
   },
-  nightsLabel: { fontSize: "13px", color: "#666" },
+  nightsLabel: { fontSize: "13px", color: "#9FB0C8" },
   btnRow: { display: "flex", gap: "8px" },
   btnClear: {
     padding: "9px 18px",
-    border: "1px solid #ccc",
+    border: "1px solid #1f2a37",
     borderRadius: "8px",
     background: "transparent",
     fontSize: "13px",
     fontWeight: 500,
-    color: "#555",
+    color: "#C7D2E6",
     cursor: "pointer",
   },
   btnApply: {
@@ -271,10 +271,10 @@ function DayCell({ date, startDate, endDate, hovered, today, onSelect, onHover }
     fontSize: "13.5px",
     fontWeight: isToday ? 600 : 400,
     color: isPast
-      ? "#ccc"
+      ? "#3b4652"
       : (isStart || isEnd || isHovEnd)
         ? "#fff"
-        : "#222",
+        : "#E6EEF8",
     ...circleStyle,
     transition: "background 0.1s",
   };
